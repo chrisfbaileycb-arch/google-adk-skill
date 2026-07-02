@@ -34,6 +34,13 @@ Principle: **every file stands alone.** Purpose, dependencies, runnable code, an
 | [`AGENT_DOCTRINE.md`](./AGENT_DOCTRINE.md) | Reusable system prompt encoding how we build & run agents |
 | [`references/local-dev.md`](./references/local-dev.md) | Install, scaffold, file structure, `.env`, run commands |
 
+### Automation — self-updating loop
+| Item | Purpose |
+|---|---|
+| [`automation/`](./automation/) | Weekly ADK release check → draft PR when the real ADK ships an update |
+| [`automation/check_adk_updates.py`](./automation/check_adk_updates.py) | Stdlib-only version diff + `gh` draft-PR engine (runs anywhere) |
+| [`automation/gemini-spark/`](./automation/gemini-spark/) | Gemini Spark agent + Cloud Function wrapper to run it in Google Cloud |
+
 **Weight legend:** 🟢 leanest overhead · 🟡 moderate · 🔴 heavier (more moving parts / cost). Pick the leanest option that does the job.
 
 ---
@@ -60,6 +67,7 @@ adk web        # Dev UI  (adk web --no-reload on Windows)
 Default to the lowest number that solves the problem — it's leaner, cheaper, and easier to secure.
 
 ## 🗺️ Roadmap
+- [x] Weekly self-updating loop (ADK release → draft PR) — see `automation/`
 - [ ] Document other platforms (LangChain, OpenAI tools) in the same one-file format
 - [ ] Connector comparison scorecard (lean-vs-heavy per task)
 - [ ] Deployment + eval templates
