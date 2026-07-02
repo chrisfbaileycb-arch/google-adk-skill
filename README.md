@@ -1,39 +1,71 @@
-# google-adk-skill
+# Agent Skills Library — Google ADK
 
-An Agent Skill for building, running, and debugging AI agents with **Google's Agent Development Kit (ADK)** — with first-class **Model Context Protocol (MCP)** integration so you can simplify agent workflows without hand-wiring every connector.
+A self-contained, team-ready library for building **real, connected, automated** AI agents with Google's **Agent Development Kit (ADK)** — with first-class **Model Context Protocol (MCP)** integration.
 
-Follows the [agentskills.io](https://agentskills.io) specification: a `SKILL.md` plus bundled `references/`.
+Principle: **every file stands alone.** Purpose, dependencies, runnable code, and connector config live together, so any teammate — or any agent — can pick it up cold and run with it. Operating philosophy is codified in [`AGENT_DOCTRINE.md`](./AGENT_DOCTRINE.md).
 
-## What's inside
+---
 
-| File | Purpose |
+## 📇 Master Index
+
+### Skill
+| Item | Purpose | Platform | Connector | Weight | Status |
+|---|---|---|---|---|---|
+| [`SKILL.md`](./SKILL.md) | ADK primitives, capabilities, orchestration, MCP patterns, local dev | ADK | native + MCP | — | ✅ Stable |
+
+### Agent-Pattern Templates
+| Pattern | Purpose | When to use | Platform | Weight | Status |
+|---|---|---|---|---|---|
+| [Single LlmAgent](./patterns/single-llm-agent/) | One LLM agent + tools | Simple self-contained task | ADK | 🟢 Leanest | ✅ Stable |
+| [Sequential Pipeline](./patterns/sequential-pipeline/) | Fixed-order stages via shared State | Known ordered steps (ETL, draft→revise) | ADK | 🟢 Lean | ✅ Stable |
+| [Parallel Fan-out](./patterns/parallel-fanout/) | Concurrent workers + synthesizer | Independent subtasks, latency-sensitive | ADK | 🟡 Medium | ✅ Stable |
+| [Loop Agent](./patterns/loop-agent/) | Iterate until good / max iterations | Refine-until-acceptable, quality gates | ADK | 🟡 Medium | ✅ Stable |
+| [Multi-Agent Delegation](./patterns/multi-agent-delegation/) | Coordinator + specialists (AgentTool / transfer) | Mixed expertise per subtask | ADK | 🔴 Heavier | ✅ Stable |
+
+### MCP Integration
+| Pattern | Purpose | Connector | Reference |
+|---|---|---|---|
+| A — ADK as MCP **client** | Consume external MCP servers (stdio + remote HTTP) | 🟢 stdio / 🟡 remote HTTP | [mcp-integration.md](./references/mcp-integration.md) |
+| B — Expose ADK tools as MCP **server** | Serve your ADK tools to any MCP client | 🟡 server | [mcp-integration.md](./references/mcp-integration.md) |
+
+### Doctrine & Dev
+| Item | Purpose |
 |---|---|
-| `SKILL.md` | Core skill: ADK primitives, capabilities, orchestration, the two MCP patterns, and local dev. |
-| `references/mcp-integration.md` | Full runnable code for **Pattern A** (ADK as MCP client — stdio + remote HTTP) and **Pattern B** (expose ADK tools as an MCP server). |
-| `references/local-dev.md` | Install, `adk create` scaffold, required file structure, `.env` keys, and run commands. |
+| [`AGENT_DOCTRINE.md`](./AGENT_DOCTRINE.md) | Reusable system prompt encoding how we build & run agents |
+| [`references/local-dev.md`](./references/local-dev.md) | Install, scaffold, file structure, `.env`, run commands |
 
-## MCP integration patterns
+**Weight legend:** 🟢 leanest overhead · 🟡 moderate · 🔴 heavier (more moving parts / cost). Pick the leanest option that does the job.
 
-- **Pattern A — ADK Agent as MCP Client**: consume external MCP servers (local stdio or remote HTTP) via `McpToolset`.
-- **Pattern B — Expose ADK Tools as an MCP Server**: serve ADK `FunctionTool`s over MCP so any MCP client can call them.
+---
 
-## Quick start
+## 🚀 Quick start
 
 ```bash
 pip install google-adk
 adk create my_agent
+# copy a pattern's agent.py into my_agent/, then:
 cd ./my_agent
-adk web        # Dev UI (use --no-reload on Windows if subprocess issues)
+adk web        # Dev UI  (adk web --no-reload on Windows)
 ```
 
-## Using this as a skill
+## 🧭 Choosing a pattern (decision guide)
 
-Download the packaged skill (zip) and add it via your agent's skill settings, or point your ADK/Claude Code setup at this repo.
+1. **One task, one brain?** → Single LlmAgent.
+2. **Known ordered steps?** → Sequential Pipeline.
+3. **Independent steps, want speed?** → Parallel Fan-out.
+4. **Refine until it passes a bar?** → Loop Agent.
+5. **Different expertise per step?** → Multi-Agent Delegation.
+6. **Capability lives in an external server?** → add MCP (Pattern A). **Want others to use your tool?** → expose it (Pattern B).
+
+Default to the lowest number that solves the problem — it's leaner, cheaper, and easier to secure.
+
+## 🗺️ Roadmap
+- [ ] Document other platforms (LangChain, OpenAI tools) in the same one-file format
+- [ ] Connector comparison scorecard (lean-vs-heavy per task)
+- [ ] Deployment + eval templates
 
 ## Source
-
-Reference material based on [adk.dev](https://adk.dev) and Google Cloud ADK documentation. Last reviewed: 2026-07-01.
+Reference material based on [adk.dev](https://adk.dev) and Google Cloud ADK docs. Last reviewed: 2026-07-01.
 
 ## License
-
 Apache-2.0

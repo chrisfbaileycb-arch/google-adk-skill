@@ -110,6 +110,22 @@ adk run my_agent                # interactive CLI instead of the UI
 
 See `references/local-dev.md` for the required project/file structure and `.env` API-key setup.
 
+## Agent-Pattern Templates
+
+Annotated, runnable, self-contained templates (each with `agent.py` + README + production notes). Copy one, swap the tool, run:
+
+- `patterns/single-llm-agent/` — one LLM agent + tools (leanest; start here).
+- `patterns/sequential-pipeline/` — fixed-order stages via shared State (`output_key` → `{key}`).
+- `patterns/parallel-fanout/` — concurrent workers + synthesizer (distinct output keys).
+- `patterns/loop-agent/` — iterate until good / `max_iterations` (escalate to stop early).
+- `patterns/multi-agent-delegation/` — coordinator + specialists via `AgentTool` or `sub_agents` transfer.
+
+Decision guide: one brain → single; known order → sequential; independent + fast → parallel; refine-to-bar → loop; mixed expertise → multi-agent. Default to the leanest that solves it.
+
+## Doctrine
+
+`AGENT_DOCTRINE.md` is a reusable system prompt encoding how to build and run agents (ship real connected systems, automate the whole chain, self-contained files, lean connectors, secure-by-default, bounded cost). Paste it into any agent's `instruction`/system field so it inherits the intent.
+
 ## References
 
 - `references/mcp-integration.md` — Complete Pattern A (stdio + remote HTTP client) and Pattern B (ADK-tools-as-MCP-server) code, with notes.
